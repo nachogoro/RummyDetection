@@ -1,0 +1,5 @@
+*.un~
+*.swp
+.ropeproject
+*.pyc
+.python-version
