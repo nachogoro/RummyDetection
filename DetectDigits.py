@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 import skimage.measure
-from utils import crop_possible_digit_from_image
+from Utils import crop_possible_digit_from_image
 import PossibleDigit
 
 import Main

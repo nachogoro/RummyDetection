@@ -6,8 +6,8 @@ import Preprocess
 import DetectDigits
 from DetectedDigit import DetectedDigit
 from Tile import Tile
-from utils import crop_possible_digit_from_image, TILE_COLORS
-import utils
+from Utils import crop_possible_digit_from_image, TILE_COLORS
+import Utils
 
 
 def _group_digits_in_tiles(detected_digits):
@@ -135,7 +135,7 @@ def detect_tiles_in_image(image, canon_img_dir):
 
     # All digits should be roughly of the same height. Group contours by
     # height.
-    possible_digits_by_height = utils.group_by_height(list_of_possible_digits)
+    possible_digits_by_height = Utils.group_by_height(list_of_possible_digits)
 
     for k in possible_digits_by_height:
         possible_digits_by_height[k] = (
@@ -179,7 +179,7 @@ def detect_tiles_in_image(image, canon_img_dir):
             break
 
     # Get the color of the detected digits as a list of DetectedDigit's
-    detected_digits = utils.detect_digit_color(recognized_digits, image)
+    detected_digits = Utils.detect_digit_color(recognized_digits, image)
 
     # Go from individual digits to tiles
     return _group_digits_in_tiles(detected_digits)
