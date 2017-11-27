@@ -129,8 +129,8 @@ def detect_tiles_in_image(image, canon_img_dir):
         for possible_digit in list_of_possible_digits:
             contours.append(possible_digit.contour)
 
-        cv2.drawContours(img_contours, contours, -1, Main.SCALAR_WHITE)
-        cv2.imshow('2b', img_contours)
+        cv2.drawContours(img_contours, contours, -1, Utils.SCALAR_WHITE)
+        cv2.imshow('2', img_contours)
         cv2.waitKey(0)
 
     # All digits should be roughly of the same height. Group contours by
@@ -142,18 +142,6 @@ def detect_tiles_in_image(image, canon_img_dir):
             DetectDigits.remove_inner_overlapping_digits(
                 possible_digits_by_height[k]))
 
-    if Main.show_steps:
-        for k, v in possible_digits_by_height.items():
-            img_contours = np.zeros((height, width, 3), np.uint8)
-
-            contours = []
-
-            for possible_digit in v:
-                contours.append(possible_digit.contour)
-
-            cv2.drawContours(img_contours, contours, - 1, Main.SCALAR_WHITE)
-            cv2.imshow('2c', img_contours)
-            cv2.waitKey(0)
 
 
     # We sort the different groups by number of elements because we assume
@@ -164,12 +152,29 @@ def detect_tiles_in_image(image, canon_img_dir):
     for chosen_set in sets_to_try:
         recognized_digits = DetectDigits.recognize_digits(img_thresh,
                                                           chosen_set)
+        if Main.show_steps:
+            # Draw contours in white
+            img_contours = np.zeros((height, width, 3), np.uint8)
+            contours = [digit.contour for digit,_ in recognized_digits]
+            cv2.drawContours(img_contours, contours, -1, Utils.SCALAR_WHITE)
+            cv2.imshow('3-candidates', img_contours)
+            cv2.waitKey(0)
+
         # KNN chooses the nearest neighbour, which means it won't be able to
         # filter out contours which are actually very far away from their
         # closest neighbour. We now compare each contour with the digit it
         # supposedly represents, and discard it if they are too far apart.
         filtered_digits = DetectDigits.filter_detected_digits(
             recognized_digits, img_thresh, canon_img_dir)
+
+        if Main.show_steps:
+            # Draw contours in white
+            img_contours = np.zeros((height, width, 3), np.uint8)
+            contours = [digit.contour for digit,_ in filtered_digits]
+            cv2.drawContours(img_contours, contours, -1, Utils.SCALAR_WHITE)
+            img_contours = Utils.draw_contours_in_image(img_contours, [c for c, p in filtered_digits])
+            cv2.imshow('3-remaining', img_contours)
+            cv2.waitKey(0)
 
         # We assume we are good to go if we have discarded either less than 3
         # or less than 25% of the original contours

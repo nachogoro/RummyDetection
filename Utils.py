@@ -10,6 +10,27 @@ TILE_COLORS = {'ORANGE': ([11, 191, 101], [19, 255, 255]),
                'BLUE': ([83, 81, 32], [119, 210, 151]),
                }
 
+SCALAR_WHITE = (255.0, 255.0, 255.0)
+SCALAR_GREEN = (0.0, 255.0, 0.0)
+
+
+def draw_contours_in_image(image, possible_digits):
+    """
+    Draws all contours of the PossibleDigit's in the image as green rectangles.
+    """
+    height, width, _ = image.shape
+    target_img = image.copy()
+
+    for digit in possible_digits:
+        top_left = (digit.intBoundingRectX, digit.intBoundingRectY)
+        bottom_right = (
+            digit.intBoundingRectX + digit.intBoundingRectWidth,
+            digit.intBoundingRectY + digit.intBoundingRectHeight)
+
+        # Draw a green rectangle around the possible digit
+        cv2.rectangle(target_img, top_left, bottom_right, SCALAR_GREEN, 2)
+    return target_img
+
 
 def group_by_height(list_of_possible_digits):
     """

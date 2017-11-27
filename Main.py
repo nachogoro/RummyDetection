@@ -7,8 +7,7 @@ import DetectDigits
 import ResultGenerator
 
 show_steps = False
-SCALAR_WHITE = (255.0, 255.0, 255.0)
-SCALAR_GREEN = (0.0, 255.0, 0.0)
+
 
 def main():
     # Construct the argument parser and parse the arguments

@@ -30,24 +30,6 @@ RESIZED_NUM_IMAGE_HEIGHT = 30
 VALUES = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'j']
 
 
-def draw_contours_in_image(image, possible_digits):
-    """
-    Draws all contours of the PossibleDigit's in the image as green rectangles.
-    """
-    height, width, _ = image.shape
-    target_img = image.copy()
-
-    for digit in possible_digits:
-        top_left = (digit.intBoundingRectX, digit.intBoundingRectY)
-        bottom_right = (
-            digit.intBoundingRectX + digit.intBoundingRectWidth,
-            digit.intBoundingRectY + digit.intBoundingRectHeight)
-
-        # Draw a green rectangle around the possible digit
-        cv2.rectangle(target_img, top_left, bottom_right, Main.SCALAR_GREEN, 2)
-    return target_img
-
-
 def load_and_train_KNN():
     """
     Loads the KNN data and trains KNN.
@@ -84,16 +66,12 @@ def find_possible_digits(img_thresh):
 
     img_thresh_copy = img_thresh.copy()
 
-    img_contours, contours, _ = cv2.findContours(
+    _, contours, _ = cv2.findContours(
         img_thresh_copy, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     height, width = img_thresh.shape
-    img_contours = np.zeros((height, width, 3), np.uint8)
 
     for i in range(0, len(contours)):
-        if Main.show_steps:
-            cv2.drawContours(img_contours, contours, i, Main.SCALAR_WHITE)
-
         possible_digit = PossibleDigit.PossibleDigit(contours[i])
 
         if _check_if_possible_digit(possible_digit):
@@ -185,11 +163,6 @@ def recognize_digits(img_thresh, list_of_digits):
         detected_digit = str(chr(int(npaResults[0][0])))
 
         closest_neighbours.append((current_digit, detected_digit))
-
-    if Main.show_steps:
-        cv2.imshow('10', draw_contours_in_image(img_threshColor,
-                                                [v[0] for v in contour_digit]))
-        cv2.waitKey(0)
 
     return closest_neighbours
 
