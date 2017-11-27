@@ -51,6 +51,10 @@ The script requires three mandatory arguments:
 
 Some sample images are provided in `examples/`.
 
+If the user in interested in the intermediate steps leading to the final
+result, they can be visualized by setting `show_steps` to `True` inside
+`Main.py`.
+
 For more information on the output format, refer to
 [RummySolver](https://github.com/nachogoro/RummySolver).
 
